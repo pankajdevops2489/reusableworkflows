@@ -1,12 +1,21 @@
 pipeline {
     agent none
     stages {
-        stage('Hello') {
-            agent { 
-                label "${env.GIT_BRANCH == 'main' ? 'aws' : 'aws-dev'}"
-            }
+        stage('Determine Agent') {
+            agent { label 'aws-dev' } // temporary node for checkout
             steps {
-                echo "Running on ${env.GIT_BRANCH == 'main' ? 'aws' : 'aws-dev'}"
+                checkout scm
+                script {
+                    env.AGENT_LABEL = (env.GIT_BRANCH == 'origin/main') ? 'aws' : 'aws-dev'
+                    echo "Branch ${env.GIT_BRANCH}, next stage will run on ${env.AGENT_LABEL}"
+                }
+            }
+        }
+
+        stage('Hello') {
+            agent { label "${env.AGENT_LABEL}" }
+            steps {
+                echo "Running on ${env.AGENT_LABEL}"
                 echo 'Hello World'
             }
         }
