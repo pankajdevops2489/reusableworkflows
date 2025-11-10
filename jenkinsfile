@@ -1,0 +1,18 @@
+def AGENT_LABEL = null
+node('aws-dev') {
+  stage('Checkout and set agent'){
+    // determine AGENT_LABEL here
+    println "here"
+    AGENT_LABEL = env.BRANCH_NAME == 'main' ? "aws" : "aws-dev"
+  }
+}
+pipeline {
+  agent { label "${AGENT_LABEL}" }
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
