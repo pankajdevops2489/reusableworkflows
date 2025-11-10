@@ -8,7 +8,9 @@ pipeline {
                 script {
                     env.AGENT_LABEL = (env.GIT_BRANCH == 'origin/main') ? 'aws' : 'aws-dev'
                     echo "Branch ${env.GIT_BRANCH}, next stage will run on ${env.AGENT_LABEL}"
-                    simpleName = env.JOB_NAME.split('/')[-1]
+                    
+                    // Wrap in script for Groovy logic
+                    def simpleName = env.JOB_NAME.split('/')[-1]
                     echo "Simple Pipeline Name: ${simpleName}"
                 }
             }
@@ -19,8 +21,10 @@ pipeline {
             steps {
                 echo "Running on ${env.AGENT_LABEL}"
                 echo 'Hello World'
-                simpleName = env.JOB_NAME.split('/')[-1]
-                echo "Simple Pipeline Name: ${simpleName}"
+                script {
+                    def simpleName = env.JOB_NAME.split('/')[-1]
+                    echo "Simple Pipeline Name: ${simpleName}"
+                }
             }
         }
     }
