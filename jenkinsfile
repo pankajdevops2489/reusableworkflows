@@ -3,6 +3,7 @@ node('aws-dev') {
   stage('Checkout and set agent'){
     // determine AGENT_LABEL here
     println "here"
+    println "${env.BRANCH_NAME}"
     AGENT_LABEL = env.BRANCH_NAME == 'main' ? "aws" : "aws-dev"
   }
 }
