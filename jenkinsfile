@@ -1,18 +1,12 @@
-def AGENT_LABEL = null
-node('aws-dev') {
-  stage('Checkout and set agent'){
-    // determine AGENT_LABEL here
-    println "here"
-    println "${env.GIT_BRANCH}"
-    AGENT_LABEL = env.GIT_BRANCH == 'main' ? "aws" : "aws-dev"
-  }
-}
 pipeline {
-  agent { label "${AGENT_LABEL}" }
+    agent none
     stages {
         stage('Hello') {
+            agent { 
+                label "${env.GIT_BRANCH == 'main' ? 'aws' : 'aws-dev'}"
+            }
             steps {
-                println "${AGENT_LABEL}"
+                echo "Running on ${env.GIT_BRANCH == 'main' ? 'aws' : 'aws-dev'}"
                 echo 'Hello World'
             }
         }
